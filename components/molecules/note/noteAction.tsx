@@ -16,9 +16,9 @@ export default function NoteAction(props : Partial<NoteActionProps>) {
   } = props;
 
   const buttonClassnames = classcat({
-    'group flex h-[52px] flex-1 flex-col items-center justify-center gap-[1px] text-sm transition hover:text-white': true,
-    'bg-blue-600/10 text-blue-600 hover:bg-blue-500': !isActive,
-    'bg-blue-500 text-white hover:bg-blue-600': isActive,
+    'group flex h-[52px] flex-1 flex-col items-center justify-center gap-[1px] text-sm transition hover:text-white dark:hover:text-blue-900': true,
+    'bg-blue-600/10 text-blue-600 hover:bg-blue-500 dark:bg-blue-500/10 dark:text-blue-400 dark:hover:bg-blue-500 dark:hover:text-slate-900/80': !isActive,
+    'bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-500 dark:text-slate-900/90 dark:hover:bg-blue-400 dark:hover:text-slate-900/80': isActive,
     'rounded-bl-md': isFirst,
     'rounded-br-md': isLast,
   });
