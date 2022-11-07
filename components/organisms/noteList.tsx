@@ -1,23 +1,8 @@
-import { useAppDispatch } from '../../app/hooks';
-import {
-  archiveNote, deleteNote, editNote, starNote,
-} from '../../features/note/noteSlice';
 import { NoteInterface } from '../../interfaces';
 import { Note } from '../molecules';
 
 export default function NoteList({ notes } : {notes : NoteInterface[]}) {
-  const dispatch = useAppDispatch();
-
-  const notesElement = notes.map((note) => (
-    <Note
-      {...note}
-      key={note.id}
-      onArchive={(id) => dispatch(archiveNote(id))}
-      onStar={(id) => dispatch(starNote(id))}
-      onDelete={(id) => dispatch(deleteNote(id))}
-      onEdit={(id, editedNote) => dispatch(editNote({ id, note: editedNote }))}
-    />
-  ));
+  const notesElement = notes.map((note) => (<Note note={note} key={note.id} />));
 
   return (
     <div className="box-border flex h-full w-full">
