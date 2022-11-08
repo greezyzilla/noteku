@@ -1,6 +1,7 @@
 import {
   ArchiveBoxIcon, PencilSquareIcon, StarIcon, TrashIcon,
 } from '@heroicons/react/24/solid';
+import parse from 'html-react-parser';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { deleteNote, editNote } from '../../../features/note';
 import { NoteInterface } from '../../../interfaces';
@@ -58,7 +59,7 @@ export default function Note({ note } : {note: NoteInterface}) {
         <h5 className="w-full break-words text-lg font-semibold text-slate-600 dark:text-slate-400">{note.title}</h5>
       </div>
       <div className="flex h-full flex-col justify-between px-2 pb-2">
-        <p className="mb-3 h-fit break-words px-2 text-sm font-normal leading-[170%] text-slate-600/90 dark:text-slate-400/90">{note.body}</p>
+        <p className="mb-3 h-fit break-words px-2 text-sm font-normal leading-[170%] text-slate-600/90 dark:text-slate-400/90">{parse(note.body)}</p>
         <div className="flex">
           <NoteAction
             Icon={TrashIcon}
