@@ -24,7 +24,7 @@ function InitialWrapper({ children } : { children:ReactElement }) {
     if (!getAccessToken()) router.replace('/auth/login');
     else if (router.asPath === '/auth/login' || router.asPath === '/auth/register') {
       router.replace('/');
-      getNote();
+      dispatch(getNote());
     } else dispatch(getNote());
   }, [window, user]);
 
