@@ -82,6 +82,7 @@ export const authSlice = createSlice({
     signOut: (state) => {
       removeAccessToken();
       state.user = undefined;
+      console.log('logout');
     },
   },
   extraReducers: (builder) => {
@@ -103,5 +104,5 @@ export const authSlice = createSlice({
   },
 });
 
-export const { getSession, setLoading } = authSlice.actions;
+export const { getSession, setLoading, signOut } = authSlice.actions;
 export default authSlice.reducer;

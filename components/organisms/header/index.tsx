@@ -1,8 +1,12 @@
+import { useAppDispatch } from '../../../app/hooks';
+import { signOut } from '../../../features/auth';
 import { ToggleDarkMode, ToggleLocale } from '../../molecules';
 import Dropdown from '../../molecules/dropdown';
 import SearchNote from './searchNote';
 
 export default function Header() {
+  const dispatch = useAppDispatch();
+
   return (
     <header className="flex h-fit w-full bg-white/80 shadow-sm dark:bg-slate-900/80">
       <div className="grid w-full flex-1 grid-cols-12 px-4 sm:px-8">
@@ -19,7 +23,7 @@ export default function Header() {
             </div>
             <ToggleLocale />
             <ToggleDarkMode />
-            <Dropdown user={{ name: 'Gunawan' }} onLogout={() => {}} />
+            <Dropdown user={{ name: 'Gunawan' }} onLogout={() => dispatch(signOut())} />
           </div>
         </div>
       </div>
