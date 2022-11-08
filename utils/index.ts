@@ -2,12 +2,13 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { NoteInterface } from '../interfaces';
 import { getAccessToken } from './lib/cache';
 
-const showFormattedDate = (date : string) => new Date(date).toLocaleDateString('id-ID', {
-  weekday: 'long',
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-});
+const showFormattedDate = (date: string, locale: string) => new Date(date)
+  .toLocaleDateString(locale, {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
 
 export interface Note{
   id: number | string;

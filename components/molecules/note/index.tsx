@@ -92,7 +92,7 @@ export default function Note({ note } : {note: NoteInterface}) {
   return (
     <div className="box-border flex min-h-[350px] flex-col gap-2 border bg-white/70 shadow-sm ring-slate-100 backdrop-blur-md hover:shadow-lg dark:border-slate-900 dark:bg-slate-900/70 dark:shadow-white/5 dark:hover:bg-slate-900">
       <div className="h-fit w-full px-4 pt-4">
-        <p className="text-xs text-orange-600 dark:text-orange-400">{showFormattedDate(note.createdAt)}</p>
+        <p className="text-xs text-orange-600 dark:text-orange-400">{showFormattedDate(note.createdAt, locale)}</p>
         <h5 className="w-full break-words text-lg font-semibold text-slate-600 dark:text-slate-400">{note.title}</h5>
       </div>
       <div className="flex h-full flex-col justify-between px-2 pb-2">
