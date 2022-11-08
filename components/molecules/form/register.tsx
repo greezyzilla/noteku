@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { z } from 'zod';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { signUp } from '../../../features/auth';
 import {
@@ -26,28 +27,56 @@ export default function RegisterForm() {
     }));
   };
 
+  const passErrMsg = {
+    en: 'Registration failed, password not match',
+    id: 'Gagal mendaftar, pasword tidak sama',
+  };
+
+  const userSchema = z.object({
+    name: z.string(),
+    email: z.string().email(),
+    password: z.string(),
+    passwordConfirmation: z.string(),
+  })
+    .required()
+    .refine((data) => data.password === data.passwordConfirmation, {
+      message: passErrMsg[locale],
+      path: ['confirm'],
+    });
+
   const onSubmitHandle = async () => {
     const {
       name, email, password, passwordConfirmation,
     } = user;
 
-    if (password !== passwordConfirmation) {
-      if (locale === 'en') toast.error('Registration failed, password not match');
-      else toast.error('Gagal mendaftar, pasword tidak sama');
-    } else {
-      const response = await dispatch(signUp({
-        name, email, password,
-      })) as { payload : { error: boolean }};
+    try {
+      userSchema.parse({
+        name,
+        email,
+        password,
+        passwordConfirmation,
+      });
 
-      if (response.payload.error) {
-        if (locale === 'en') toast.error('Registration failed, please try again~');
-        else toast.error('Gagal mendaftar, coba lagi~');
+      if (password !== passwordConfirmation) {
+        if (locale === 'en') toast.error('Registration failed, password not match');
+        else toast.error('Gagal mendaftar, pasword tidak sama');
       } else {
-        if (locale === 'en') toast.success('Registration success');
-        else toast.success('Berhasil Mendaftar');
+        const response = await dispatch(signUp({
+          name, email, password,
+        })) as { payload : { error: boolean }};
 
-        router.push('/auth/login');
+        if (response.payload.error) {
+          if (locale === 'en') toast.error('Registration failed, please try again~');
+          else toast.error('Gagal mendaftar, coba lagi~');
+        } else {
+          if (locale === 'en') toast.success('Registration success');
+          else toast.success('Berhasil Mendaftar');
+
+          router.push('/auth/login');
+        }
       }
+    } catch (err : any) {
+      err.errors.forEach((e : Error) => toast.error(e.message));
     }
   };
 
