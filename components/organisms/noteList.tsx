@@ -1,8 +1,13 @@
+import { useAppSelector } from '../../app/hooks';
 import { NoteInterface } from '../../interfaces';
 import { Note } from '../molecules';
+import Loading from './loading';
 
 export default function NoteList({ notes } : {notes : NoteInterface[]}) {
   const notesElement = notes.map((note) => (<Note note={note} key={note.id} />));
+
+  const loading = useAppSelector((state) => state.note.loading);
+  if (loading) return <Loading />;
 
   return (
     <div className="box-border flex h-full w-full">
