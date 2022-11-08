@@ -109,7 +109,7 @@ export const noteSlice = createSlice({
     builder.addCase(addNote.pending, (state) => { state.loading = true; });
     builder.addCase(addNote.rejected, (state) => { state.loading = false; });
     builder.addCase(addNote.fulfilled, (state, action) => {
-      if (!action.payload.error) state.notes.push(action.payload.data.note);
+      if (!action.payload.error) state.notes.unshift(action.payload.data.note);
       state.loading = false;
     });
     builder.addCase(editNote.pending, (state) => { state.loading = true; });
