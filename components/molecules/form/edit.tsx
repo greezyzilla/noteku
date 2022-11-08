@@ -1,6 +1,6 @@
 import { ChangeEvent, ComponentProps, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { PlusIcon } from '@heroicons/react/24/solid';
+import { PencilSquareIcon } from '@heroicons/react/24/solid';
 import {
   Button, InputText, InputTextarea, Modal,
 } from '../../atoms';
@@ -68,11 +68,11 @@ export default function EditNoteForm({ children, note } : EditNoteFormProps) {
     ? createPortal(
       <Modal onClose={onCloseHandle}>
         <div className="w-[320px] divide-y shadow-2xl dark:divide-slate-600 sm:w-[500px]">
-          <div className="flex items-center gap-4 bg-gradient-to-l from-blue-400 to-blue-600 px-5 pt-5 pb-4 dark:from-blue-700 dark:to-blue-800">
-            <div className="rounded-md bg-blue-100 p-2 dark:bg-slate-900/80">
-              <PlusIcon className="h-3 w-3 text-blue-600 shadow-sm dark:text-blue-400" />
+          <div className="flex items-center gap-4 bg-gradient-to-l from-orange-400 to-orange-600 px-5 pt-5 pb-4">
+            <div className="rounded-md bg-orange-100 p-2">
+              <PencilSquareIcon className="h-3 w-3 text-orange-600" />
             </div>
-            <h2 className="text-xl font-bold text-white dark:text-slate-900/90">ADD NEW NOTE</h2>
+            <h2 className="text-xl font-bold text-white">EDIT NOTE</h2>
           </div>
           <div className="flex flex-col gap-4 divide-y-2 px-5 pt-4 pb-5 sm:px-8">
             <form className="flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>

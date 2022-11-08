@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
+import { NoteInterface } from '../interfaces';
 import { getAccessToken } from './lib/cache';
 
 const showFormattedDate = (date : string) => new Date(date).toLocaleDateString('id-ID', {
@@ -29,4 +30,8 @@ async function fetchWithToken(baseURL : string, options : AxiosRequestConfig<any
   return response.data;
 }
 
-export { showFormattedDate, fetchWithToken };
+const sortNotesByDate = (a : NoteInterface, b : NoteInterface) => (
+  +new Date(b.createdAt) - +new Date(a.createdAt)
+);
+
+export { showFormattedDate, fetchWithToken, sortNotesByDate };

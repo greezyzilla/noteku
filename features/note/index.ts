@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { fetchWithToken } from '../../utils';
+import { fetchWithToken, sortNotesByDate } from '../../utils';
 
 export interface NoteInterface{
     id: number;
@@ -55,15 +55,11 @@ export const addNote = createAsyncThunk(
 
 export const editNote = createAsyncThunk(
   'note/edit',
-  async ({
-    id, title, body, starred, archived,
-  } : NoteInterface) => {
+  async (note : NoteInterface) => {
     try {
-      const payload = await fetchWithToken(`/api/notes/${id}`, {
+      const payload = await fetchWithToken(`/api/notes/${note.id}`, {
         method: 'PUT',
-        data: {
-          title, body, starred, archived,
-        },
+        data: note,
       });
 
       if (payload.error) throw new Error();
@@ -88,6 +84,13 @@ export const deleteNote = createAsyncThunk(
   },
 );
 
+interface GetNotePayloadInterface {
+  error: boolean;
+  data? : {
+    notes : NoteInterface[]
+  }
+}
+
 export const noteSlice = createSlice({
   name: 'note',
   initialState,
@@ -99,8 +102,8 @@ export const noteSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getNote.pending, (state) => { state.loading = true; });
     builder.addCase(getNote.rejected, (state) => { state.loading = false; });
-    builder.addCase(getNote.fulfilled, (state, action) => {
-      if (!action.payload.error) state.notes = action.payload.data.notes;
+    builder.addCase(getNote.fulfilled, (state, action: PayloadAction<GetNotePayloadInterface>) => {
+      if (!action.payload.error) state.notes = action.payload.data!.notes.sort(sortNotesByDate);
       state.loading = false;
     });
     builder.addCase(addNote.pending, (state) => { state.loading = true; });

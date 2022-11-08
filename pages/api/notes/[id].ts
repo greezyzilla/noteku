@@ -25,12 +25,12 @@ export default async function handler(req : NextApiRequest, res: NextApiResponse
     // EDIT NOTE
     if (req.method === 'PUT') {
       const {
-        title, body, starred, archived,
+        title, body, starred, archived, createdAt,
       } = req.body as NoteInterface;
 
       const newNote = await prisma.note.update({
         data: {
-          title, body, starred, archived,
+          title, body, starred, archived, createdAt,
         },
         where: { id },
       });
