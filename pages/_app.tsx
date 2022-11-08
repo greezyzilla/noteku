@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { ReactElement, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
+import Head from 'next/head';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { store } from '../app/store';
 import { getNote } from '../features/note';
@@ -44,6 +45,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     <Provider store={store}>
       <InitialWrapper>
         <>
+          <Head>
+            <title>Noteku</title>
+          </Head>
           <Component {...pageProps} />
           <ToastContainer />
         </>
