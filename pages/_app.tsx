@@ -22,8 +22,10 @@ function InitialWrapper({ children } : { children:ReactElement }) {
     dispatch(setInitialTheme({ theme, locale }));
 
     if (!getAccessToken()) router.replace('/auth/login');
-    else if (router.asPath === '/auth/login' || router.asPath === '/auth/register') router.replace('/');
-    else dispatch(getNote());
+    else if (router.asPath === '/auth/login' || router.asPath === '/auth/register') {
+      router.replace('/');
+      getNote();
+    } else dispatch(getNote());
   }, [window, user]);
 
   return children;
