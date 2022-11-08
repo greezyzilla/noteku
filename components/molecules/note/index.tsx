@@ -2,12 +2,19 @@ import {
   ArchiveBoxIcon, PencilSquareIcon, StarIcon, TrashIcon,
 } from '@heroicons/react/24/solid';
 import parse from 'html-react-parser';
+import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { deleteNote, editNote } from '../../../features/note';
 import { NoteInterface } from '../../../interfaces';
 import { showFormattedDate } from '../../../utils';
 import { EditNoteForm } from '../form';
 import NoteAction from './noteAction';
+
+interface EditResponse {
+  payload : {
+    error: boolean;
+  }
+}
 
 const copywrite = {
   buttons: {
@@ -34,22 +41,52 @@ export default function Note({ note } : {note: NoteInterface}) {
   const locale = useAppSelector((state) => state.theme.locale);
 
   const dispatch = useAppDispatch();
-  const onStar = () => {
-    dispatch(editNote({
+  const onStar = async () => {
+    const response = await dispatch(editNote({
       ...note,
       starred: !note.starred,
     }));
+
+    if (!note.starred) {
+      if (response.payload.error) {
+        if (locale === 'en') toast.error('Failed add note to favoriteN');
+        else toast.error('Gagal menambahkan catatan ke favorit');
+      } else if (locale === 'en') toast.success('Note added to favorite successfully');
+      else toast.success('Berhasil menambahkan catatan ke favorit');
+    } else if (response.payload.error) {
+      if (locale === 'en') toast.error('Failed remove note from favorite');
+      else toast.error('Gagal mengeluarkan catatan dari favorit');
+    } else if (locale === 'en') toast.success('Note removed from favorite successfully');
+    else toast.success('Berhasil mengeluarkan catatan dari favorit');
   };
 
-  const onArchive = () => {
-    dispatch(editNote({
+  const onArchive = async () => {
+    const response = await dispatch(editNote({
       ...note,
       archived: !note.archived,
-    }));
+    })) as EditResponse;
+
+    if (!note.archived) {
+      if (response.payload.error) {
+        if (locale === 'en') toast.error('Failed archieving note');
+        else toast.error('Gagal mengarsipkan catatan');
+      } else if (locale === 'en') toast.success('Note archived successfully');
+      else toast.success('Berhasil mengarsipkan catatan');
+    } else if (response.payload.error) {
+      if (locale === 'en') toast.error('Failed unarchieving note');
+      else toast.error('Gagal batal arsip catatan');
+    } else if (locale === 'en') toast.success('Note unarchieved successfully');
+    else toast.success('Berhasil batal arsip catatan');
   };
 
-  const onDelete = () => {
-    dispatch(deleteNote(note.id));
+  const onDelete = async () => {
+    const response = await dispatch(deleteNote(note.id)) as EditResponse;
+
+    if (response.payload.error) {
+      if (locale === 'en') toast.error('Error deleting note');
+      else toast.error('Gagal menghapus catatan');
+    } else if (locale === 'en') toast.success('Note deleted successfully');
+    else toast.success('Catatan berhasil dihapus');
   };
 
   return (

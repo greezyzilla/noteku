@@ -1,10 +1,11 @@
 import { ChangeEvent, ComponentProps, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { PlusIcon } from '@heroicons/react/24/solid';
+import { toast } from 'react-toastify';
 import {
   Button, InputText, InputTextarea, Modal,
 } from '../../atoms';
-import { useAppDispatch } from '../../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { addNote } from '../../../features/note';
 
 const initialState = {
@@ -27,6 +28,7 @@ export default function AddNoteForm({ children } : {children : ComponentProps<an
     },
   });
 
+  const locale = useAppSelector((state) => state.theme.locale);
   const dispatch = useAppDispatch();
 
   const onCloseHandle = () => {
@@ -56,7 +58,14 @@ export default function AddNoteForm({ children } : {children : ComponentProps<an
   };
 
   const onSubmitHandle = async () => {
-    await dispatch(addNote(data.note));
+    const response = await dispatch(addNote(data.note));
+
+    if (response.payload.error) {
+      if (locale === 'en') toast.error('Error adding note');
+      else toast.error('Gagal menambahkan catatan');
+    } else if (locale === 'en') toast.success('Note added successfully');
+    else toast.success('Berhasil menambahkan catatan');
+
     onCloseHandle();
   };
 

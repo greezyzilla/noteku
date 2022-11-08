@@ -2,12 +2,14 @@ import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import { ReactElement, useEffect } from 'react';
 import { Provider } from 'react-redux';
+import { toast, ToastContainer } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { store } from '../app/store';
 import { getNote } from '../features/note';
 import { LocaleType, setInitialTheme, ThemeType } from '../features/theme';
 import '../styles/globals.css';
 import { getAccessToken } from '../utils/lib/cache';
+import 'react-toastify/dist/ReactToastify.css';
 
 const window = undefined;
 
@@ -23,8 +25,14 @@ function InitialWrapper({ children } : { children:ReactElement }) {
 
     if (!getAccessToken()) router.replace('/auth/login');
     else if (router.asPath === '/auth/login' || router.asPath === '/auth/register') {
-      router.replace('/');
-      dispatch(getNote());
+      dispatch(getNote()).then((response) => {
+        if (response.payload.error) {
+          if (locale === 'en') toast.error('Error fetching notes');
+          else toast.error('Gagal mengunduh catatan');
+        }
+
+        router.replace('/');
+      });
     } else dispatch(getNote());
   }, [window, user]);
 
@@ -35,7 +43,10 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
       <InitialWrapper>
-        <Component {...pageProps} />
+        <>
+          <Component {...pageProps} />
+          <ToastContainer />
+        </>
       </InitialWrapper>
     </Provider>
   );

@@ -82,7 +82,6 @@ export const authSlice = createSlice({
     signOut: (state) => {
       removeAccessToken();
       state.user = undefined;
-      console.log('logout');
     },
   },
   extraReducers: (builder) => {

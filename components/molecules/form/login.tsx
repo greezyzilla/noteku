@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { signIn } from '../../../features/auth';
 import { Button, InputEmail, InputPassword } from '../../atoms';
@@ -9,6 +10,7 @@ export default function LoginForm() {
     password: '',
   });
 
+  const locale = useAppSelector((state) => state.theme.locale);
   const dispatch = useAppDispatch();
 
   const onChangeHandle = (event : any) => {
@@ -19,12 +21,13 @@ export default function LoginForm() {
   };
 
   const onSubmitHandle = async () => {
-    // onLogin(user);
-    const { payload } = await dispatch(signIn(user));
-    console.log(payload);
+    const { payload } = await dispatch(signIn(user)) as { payload : { error: boolean }};
+    if (payload.error) {
+      if (locale === 'en') toast.error('Login failed, please try again~');
+      else toast.error('Gagal masuk, coba lagi~');
+    } else if (locale === 'en') toast.success('Login sucess');
+    else toast.success('Berhasil masuk');
   };
-
-  const locale = useAppSelector((state) => state.theme.locale);
 
   return (
     <div className="w-[400px] bg-white/80 px-10 py-8 dark:bg-slate-900/80">

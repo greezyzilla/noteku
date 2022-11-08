@@ -1,10 +1,11 @@
 import { ChangeEvent, ComponentProps, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { PencilSquareIcon } from '@heroicons/react/24/solid';
+import { toast } from 'react-toastify';
 import {
   Button, InputText, InputTextarea, Modal,
 } from '../../atoms';
-import { useAppDispatch } from '../../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { editNote } from '../../../features/note';
 import { NoteInterface } from '../../../interfaces';
 
@@ -32,6 +33,7 @@ export default function EditNoteForm({ children, note } : EditNoteFormProps) {
     },
   });
 
+  const locale = useAppSelector((state) => state.theme.locale);
   const dispatch = useAppDispatch();
 
   const onCloseHandle = () => {
@@ -60,7 +62,13 @@ export default function EditNoteForm({ children, note } : EditNoteFormProps) {
   };
 
   const onSubmitHandle = async () => {
-    await dispatch(editNote(data.note));
+    const response = await dispatch(editNote(data.note));
+
+    if (response.payload.error) {
+      if (locale === 'en') toast.error('Error fetching notes');
+      else toast.error('Gagal mengunduh catatan');
+    }
+
     onCloseHandle();
   };
 

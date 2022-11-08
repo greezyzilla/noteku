@@ -1,4 +1,6 @@
+import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { signUp } from '../../../features/auth';
 import {
@@ -13,7 +15,9 @@ export default function RegisterForm() {
     passwordConfirmation: '',
   });
 
+  const locale = useAppSelector((state) => state.theme.locale);
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const onChangeHandle = (event : any) => {
     setUser((prevState) => ({
@@ -27,12 +31,25 @@ export default function RegisterForm() {
       name, email, password, passwordConfirmation,
     } = user;
 
-    dispatch(signUp({
-      name, email, password,
-    }));
-  };
+    if (password !== passwordConfirmation) {
+      if (locale === 'en') toast.error('Registration failed, password not match');
+      else toast.error('Gagal mendaftar, pasword tidak sama');
+    } else {
+      const response = await dispatch(signUp({
+        name, email, password,
+      })) as { payload : { error: boolean }};
 
-  const locale = useAppSelector((state) => state.theme.locale);
+      if (response.payload.error) {
+        if (locale === 'en') toast.error('Registration failed, please try again~');
+        else toast.error('Gagal mendaftar, coba lagi~');
+      } else {
+        if (locale === 'en') toast.success('Registration success');
+        else toast.success('Berhasil Mendaftar');
+
+        router.push('/auth/login');
+      }
+    }
+  };
 
   return (
     <div className="w-[400px] bg-white/80 px-10 py-8 dark:bg-slate-900/80">
