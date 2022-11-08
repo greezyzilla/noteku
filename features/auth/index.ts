@@ -92,14 +92,16 @@ export const authSlice = createSlice({
     builder.addCase(signIn.pending, (state) => { state.loading = true; });
     builder.addCase(signIn.rejected, (state) => { state.loading = false; });
     builder.addCase(signIn.fulfilled, (state, action) => {
-      putAccessToken(action.payload.data?.accessToken);
+      if (!action.payload.error) {
+        putAccessToken(action.payload.data?.accessToken);
 
-      const user = jwt.decode(action.payload.data?.accessToken) as UserInterface;
-      state.user = {
-        name: user.name,
-        email: user.email,
-      };
-      state.loading = false;
+        const user = jwt.decode(action.payload.data?.accessToken) as UserInterface;
+        state.user = {
+          name: user.name,
+          email: user.email,
+        };
+        state.loading = false;
+      }
     });
   },
 });
